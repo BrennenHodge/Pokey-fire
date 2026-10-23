@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Pokey Fire",
+    "slug": "pokey-fire",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pokeyfire.app"
+    },
+    "android": {
+      "package": "com.pokeyfire.app",
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA",
+        "READ_MEDIA_IMAGES"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Pokey Fire uses photos to add Pok\u00e9mon card pictures.",
+          "cameraPermission": "Pokey Fire uses the camera to take Pok\u00e9mon card pictures.",
+          "microphonePermission": false
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      }
+    }
+  }
+}
