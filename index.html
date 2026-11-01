@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111111"><title>Pokey Fire</title>
+<style>
+:root{--bg:#f5f5f5;--panel:#fff;--ink:#171717;--muted:#707070;--line:#e5e5e5;--hot:#ff5a36;--soft:#fff0eb}
+[data-theme=dark]{--bg:#101010;--panel:#1c1c1c;--ink:#f7f7f7;--muted:#aaa;--line:#333;--soft:#382019}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px max(18px,calc((100% - 980px)/2));border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:5}
+.brand{font-weight:900;font-size:22px;letter-spacing:-1px}.brand b{color:var(--hot)}button,.btn{border:0;border-radius:13px;padding:12px 16px;font-weight:750;background:var(--ink);color:var(--panel);cursor:pointer;font-size:15px}button.secondary{background:var(--bg);color:var(--ink);border:1px solid var(--line)}button.hot{background:var(--hot);color:white}
+main{max-width:980px;margin:auto;padding:26px 18px 70px}.hero{padding:28px 0 22px}.eyebrow{color:var(--hot);font-weight:850;text-transform:uppercase;font-size:12px;letter-spacing:1.6px}.hero h1{font-size:clamp(34px,7vw,58px);line-height:1.02;letter-spacing:-2px;margin:10px 0}.hero p{color:var(--muted);max-width:580px;line-height:1.5}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px;min-width:0}.panel h2{margin:0 0 8px;font-size:20px}.muted{color:var(--muted);font-size:14px;line-height:1.45}
+.camera{margin-top:16px;background:#171717;border-radius:17px;aspect-ratio:4/3;display:grid;place-items:center;overflow:hidden;position:relative;color:#fff}.camera video,.camera img{width:100%;height:100%;object-fit:contain}.camera .placeholder{text-align:center;padding:20px}.camera .placeholder .emoji{font-size:48px}.camera .tag{position:absolute;left:12px;top:12px;background:#0009;color:#fff;padding:7px 10px;border-radius:20px;font-size:12px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.actions button{flex:1;min-width:120px}.notice{margin-top:14px;padding:12px 14px;background:var(--soft);border-radius:13px;color:var(--muted);font-size:13px;line-height:1.45}
+.result{display:none;margin-top:16px;border-top:1px solid var(--line);padding-top:16px}.result img{width:88px;height:120px;object-fit:contain;background:#eee;border-radius:9px;float:left;margin-right:14px}.result strong{font-size:18px}.result:after{content:"";display:block;clear:both}
+.collection-head{display:flex;justify-content:space-between;align-items:center;margin:26px 0 12px}.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px}.thumb{height:130px;border-radius:10px;background:var(--bg);display:grid;place-items:center;overflow:hidden;font-size:36px}.thumb img{width:100%;height:100%;object-fit:contain}.card h3{font-size:14px;margin:9px 0 3px}.card p{font-size:12px;color:var(--muted);margin:0}.empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:16px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:28px 12px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.hero{padding-top:18px}header{padding:13px 16px}}
+</style></head>
+<body>
+<header><div class="brand">POKEY <b>FIRE</b> 🔥</div><button class="secondary" id="themeBtn" aria-label="Switch theme">☾ Theme</button></header>
+<main>
+<section class="hero"><div class="eyebrow">Your Pokémon card collection</div><h1>Scan it.<br><span style="color:var(--hot)">Know it.</span></h1><p>Capture a card, keep your collection organized, and get ready for automatic card identification and price lookups.</p></section>
+<section class="grid">
+<div class="panel">
+<h2>Card scanner</h2><div class="muted">Center one card in the camera frame, then take a picture.</div>
+<div class="camera" id="cameraBox"><div class="placeholder" id="cameraPlaceholder"><div class="emoji">📸</div><b>Your camera preview appears here</b><div class="muted" style="color:#bbb">Allow camera access when prompted</div></div><span class="tag">POKEY FIRE SCAN</span></div>
+<div class="actions"><button class="hot" id="startBtn">Open camera</button><button class="secondary" id="captureBtn" disabled>Capture card</button><button class="secondary" id="uploadBtn">Upload photo</button></div>
+<input id="fileInput" type="file" accept="image/*" capture="environment" hidden>
+<div class="notice" id="status">Camera access works on a secure HTTPS website. You can also upload a card photo.</div>
+<div class="result" id="result"><img id="resultImage" alt="Captured card"><div><strong>Photo captured!</strong><p class="muted">The photo is ready for recognition. Automatic Pokémon identification and live price data still need a recognition API and secure server connection.</p><button class="hot" id="saveBtn">Save photo to demo collection</button></div></div>
+</div>
+<div class="panel"><h2>How scanning will work</h2><p class="muted">The finished scanner will identify the Pokémon, exact set, card number, and variant from one photo.</p>
+<div style="display:grid;gap:13px;margin-top:20px">
+<div><b>① Take one photo</b><div class="muted">No typing card details.</div></div>
+<div><b>② Identify the exact card</b><div class="muted">Recognition service matches the artwork and printed details.</div></div>
+<div><b>③ Show prices</b><div class="muted">Raw and PSA 10 estimates with a source and last-updated date.</div></div>
+</div><div class="notice">This published demo currently tests camera access, photo capture, and saving pictures locally. It does not pretend to identify cards or invent prices.</div></div>
+</section>
+<div class="collection-head"><div><h2 style="margin:0">My collection</h2><div class="muted">Photos saved on this device</div></div><button class="secondary" id="clearBtn">Clear demo</button></div>
+<div class="cards" id="cards"><div class="empty" style="grid-column:1/-1">Your scanned cards will appear here.</div></div>
+<footer>Pokey Fire demo · Photos stay in this browser on this device. Not affiliated with Pokémon or Nintendo.</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);let stream=null,currentPhoto=null;
+const saved=()=>{try{return JSON.parse(localStorage.getItem('pokey-fire-demo')||'[]')}catch{return []}};
+function render(){const list=saved();$('cards').innerHTML=list.length?list.map((x,i)=>`<article class="card"><div class="thumb"><img src="${x.src}" alt="Saved card photo"></div><h3>Scanned card ${i+1}</h3><p>Photo saved · Identification pending</p></article>`).join(''):'<div class="empty" style="grid-column:1/-1">Your scanned cards will appear here.</div>'}
+function showPhoto(src){currentPhoto=src;$('cameraBox').innerHTML=`<img src="${src}" alt="Card photo"><span class="tag">PHOTO READY</span>`;$('resultImage').src=src;$('result').style.display='block';$('status').textContent='Photo captured. Automatic identification is not connected in this demo yet.'}
+$('startBtn').onclick=async()=>{try{if(!navigator.mediaDevices?.getUserMedia)throw Error('Camera access requires a secure HTTPS page and a supported browser.');stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});$('cameraBox').innerHTML='<video id="liveVideo" autoplay playsinline muted></video><span class="tag">LIVE CAMERA</span>';$('liveVideo').srcObject=stream;$('captureBtn').disabled=false;$('status').textContent='Camera is ready. Center your card and tap Capture card.'}catch(e){$('status').textContent=e.message+' You can use Upload photo instead.'}};
+$('captureBtn').onclick=()=>{const v=$('liveVideo');if(!v||!v.videoWidth)return;const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);showPhoto(c.toDataURL('image/jpeg',.88));if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('captureBtn').disabled=true};
+$('uploadBtn').onclick=()=>$('fileInput').click();
+$('fileInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>showPhoto(r.result);r.readAsDataURL(f)};
+$('saveBtn').onclick=()=>{if(!currentPhoto)return;const list=saved();list.unshift({src:currentPhoto});try{localStorage.setItem('pokey-fire-demo',JSON.stringify(list));render();$('status').textContent='Photo saved to this browser’s demo collection.'}catch{$('status').textContent='This photo is too large to save in browser storage. Try a smaller image.'}};
+$('clearBtn').onclick=()=>{if(confirm('Clear the demo photos saved in this browser?')){localStorage.removeItem('pokey-fire-demo');render()}};
+$('themeBtn').onclick=()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('themeBtn').textContent=dark?'☀ Light':'☾ Theme'};
+render();
+</script></body></html>
