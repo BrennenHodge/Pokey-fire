@@ -1,13 +1,16 @@
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
-// Where the Pokey Fire server (./server) lives. Override with EXPO_PUBLIC_API_URL;
-// otherwise assume it runs on port 8787 of the same machine as the Expo dev server,
-// which is what a phone running Expo Go on the same Wi-Fi needs.
+// Where the Pokey Fire server (./server) lives. Override with EXPO_PUBLIC_API_URL.
+// The deployed web build is served by the same Worker as the API, so it uses its own
+// origin; in local development the server runs on port 8787 of the dev machine, which
+// is also what a phone running Expo Go on the same Wi-Fi needs.
 function defaultApiUrl() {
   if (process.env.EXPO_PUBLIC_API_URL) return process.env.EXPO_PUBLIC_API_URL.replace(/\/$/, '');
   if (Platform.OS === 'web' && typeof window !== 'undefined') {
-    return `${window.location.protocol}//${window.location.hostname}:8787`;
+    const { protocol, hostname, origin } = window.location;
+    const local = hostname === 'localhost' || hostname === '127.0.0.1' || /^(10|192\.168|172\.(1[6-9]|2\d|3[01]))\./.test(hostname);
+    return local ? `${protocol}//${hostname}:8787` : origin;
   }
   const host = Constants.expoConfig?.hostUri?.split(':')[0];
   return `http://${host || 'localhost'}:8787`;

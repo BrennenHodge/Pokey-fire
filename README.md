@@ -50,6 +50,18 @@ npx expo start
 - **Browser:** press `w`. The web build uses the webcam or a photo upload.
 - To point the app at a hosted server, set `EXPO_PUBLIC_API_URL=https://your-server.example.com` before `npx expo start`.
 
+## Deploy to Cloudflare
+
+One Cloudflare Worker serves both the API (`server/src/worker.js`) and the web build (`dist/`); see `wrangler.jsonc`.
+
+```bash
+npx wrangler login                     # once
+npx wrangler secret put XAI_API_KEY    # once; paste your xAI key
+npm run deploy                         # builds the web app and deploys
+```
+
+Card scans are rate-limited to 10 per minute per visitor so a shared link can't run up your xAI bill. For the phone app, set `EXPO_PUBLIC_API_URL` to the Worker URL.
+
 ## Notes and limits
 
 - Prices are for **ungraded, Near Mint** copies. PSA/graded prices aren't in this data source.

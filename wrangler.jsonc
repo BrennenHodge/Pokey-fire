@@ -1,0 +1,25 @@
+// Cloudflare deployment: one Worker serves the API (server/src/worker.js) and the
+// Expo web build (dist/). Deploy with `npm run deploy`.
+// The xAI key is a secret: `npx wrangler secret put XAI_API_KEY`.
+{
+  "name": "pokey-fire",
+  "main": "server/src/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "account_id": "d06c70a0b6279642a6243926161f574b",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  // Each scan costs xAI credit: at most 10 scans per minute per visitor IP.
+  "ratelimits": [
+    {
+      "name": "IDENTIFY_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 10, "period": 60 }
+    }
+  ],
+  "observability": { "enabled": true }
+}
