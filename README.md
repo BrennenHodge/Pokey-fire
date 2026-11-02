@@ -60,6 +60,8 @@ npx wrangler secret put XAI_API_KEY    # once; paste your xAI key
 npm run deploy                         # builds the web app and deploys
 ```
 
+The web build is an installable PWA (`public/`: `manifest.json`, `sw.js`, icons rendered from `assets/icon.svg`, and an `index.html` template with the iOS home-screen tags). Android/desktop Chrome offer "Install app"; on iPhone use Share → Add to Home Screen. The service worker caches the app and card images so the collection opens offline; prices and scans need a connection. Long-press the icon for "Scan a card" and "My collection" shortcuts.
+
 Card scans are rate-limited to 10 per minute per visitor so a shared link can't run up your xAI bill. For the phone app, set `EXPO_PUBLIC_API_URL` to the Worker URL.
 
 ## Notes and limits

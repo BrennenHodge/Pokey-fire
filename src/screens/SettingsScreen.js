@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Platform, ScrollView, Switch, Text, View } from 'react-native';
 import { api, API_URL } from '../api';
+import { useInstallPrompt } from '../installPrompt';
 import { ORANGE } from '../theme';
 import { Button, Panel, useStyles } from '../ui';
 
@@ -24,6 +25,7 @@ function confirm(title, message, onYes) {
 export default function SettingsScreen({ name, dark, onToggleTheme, priv, onTogglePrivate, onClearCollection, onSignOut }) {
   const s = useStyles(styles);
   const [health, setHealth] = useState(null);
+  const pwa = useInstallPrompt();
 
   useEffect(() => {
     api.health().then(setHealth, (e) => setHealth({ error: e.message }));
@@ -32,6 +34,21 @@ export default function SettingsScreen({ name, dark, onToggleTheme, priv, onTogg
   return (
     <ScrollView contentContainerStyle={s.page}>
       <Text style={s.h1}>Settings</Text>
+      {pwa && !pwa.installed ? (
+        <Panel style={{ gap: 10 }}>
+          <Text style={s.h2}>Install Pokey Fire</Text>
+          {pwa.canPrompt ? (
+            <>
+              <Text style={s.muted}>Add Pokey Fire to your home screen. It opens full screen like a regular app.</Text>
+              <Button icon="download-outline" label="Install app" onPress={pwa.install} />
+            </>
+          ) : pwa.ios ? (
+            <Text style={s.muted}>In Safari, tap the Share button, then “Add to Home Screen”.</Text>
+          ) : (
+            <Text style={s.muted}>Use your browser’s menu and choose “Install app” or “Add to Home screen”.</Text>
+          )}
+        </Panel>
+      ) : null}
       <Panel>
         <Text style={s.h2}>Profile</Text>
         <Text style={s.text}>@{name}</Text>

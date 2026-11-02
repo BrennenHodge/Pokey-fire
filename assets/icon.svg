@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Pokey Fire app icon: a tilted trading card with a flame, on brand orange.
+       Source for the PNGs in public/icons. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff7a3d"/>
+      <stop offset="1" stop-color="#e8410f"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffb02e"/>
+      <stop offset="1" stop-color="#ff4a12"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <g id="mark" transform="rotate(-8 256 256)">
+    <rect x="151" y="96" width="210" height="320" rx="22" fill="#000" opacity="0.18" transform="translate(10 12)"/>
+    <rect x="151" y="96" width="210" height="320" rx="22" fill="#fff"/>
+    <rect x="167" y="112" width="178" height="288" rx="12" fill="none" stroke="#ffd9c7" stroke-width="5"/>
+    <path fill="url(#flame)" d="M256 150c18 36 58 62 58 122c0 46-27 82-58 82s-58-36-58-82c0-34 16-54 30-72c2 22 10 36 22 42c-6-34-6-62 6-92z"/>
+    <path fill="#fff3d6" d="M256 262c10 18 26 30 26 54c0 20-12 34-26 34s-26-14-26-34c0-16 8-26 14-34c2 10 6 16 12 18c-3-14-3-26 0-38z"/>
+  </g>
+</svg>

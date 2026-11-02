@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
@@ -65,10 +65,17 @@ function Welcome({ onStart }) {
   );
 }
 
+// Web app shortcuts (manifest.json) open the app at /?tab=scan or /?tab=collection.
+function initialTab() {
+  if (Platform.OS !== 'web' || typeof window === 'undefined') return null;
+  const t = new URLSearchParams(window.location.search).get('tab');
+  return TABS.some((x) => x.key === t) ? t : null;
+}
+
 function Shell({ state, update }) {
   const s = useStyles(styles);
   const { c, dark } = React.useContext(ThemeContext);
-  const [tab, setTab] = useState(state.items.length ? 'collection' : 'scan');
+  const [tab, setTab] = useState(() => initialTab() || (state.items.length ? 'collection' : 'scan'));
   const [detail, setDetail] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [toast, setToast] = useState(null);
